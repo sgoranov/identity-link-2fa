@@ -1,5 +1,5 @@
 {
-    "name": "sgoranov/php-identity-link-2fa-google",
+    "name": "sgoranov/php-identity-link-2fa",
     "type": "project",
     "license": "MIT",
     "minimum-stability": "dev",
