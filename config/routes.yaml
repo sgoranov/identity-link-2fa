@@ -3,3 +3,8 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
+api_v1_ping:
+    path: /api/v1/ping
+    methods: GET
+    controller: sgoranov\PHPIdentityLinkShared\Controller\PingController::ping
