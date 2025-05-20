@@ -1,5 +1,5 @@
 {
-    "name": "sgoranov/php-identity-link-2fa",
+    "name": "sgoranov/identity-link-2fa",
     "type": "project",
     "license": "MIT",
     "minimum-stability": "dev",
@@ -13,7 +13,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.3",
         "doctrine/orm": "2.*",
         "endroid/qr-code": "^5.0",
-        "sgoranov/php-identity-link-shared": "dev-develop",
+        "sgoranov/identity-link-shared": "dev-develop",
         "spomky-labs/otphp": "^11.3",
         "symfony/console": "6.4.*",
         "symfony/dotenv": "6.4.*",
@@ -93,7 +93,7 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/sgoranov/php-identity-link-shared"
+            "url": "https://github.com/sgoranov/identity-link-shared"
         }
     ]
 }

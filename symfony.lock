@@ -52,7 +52,7 @@
             "tests/bootstrap.php"
         ]
     },
-    "sgoranov/php-identity-link-shared": {
+    "sgoranov/identity-link-shared": {
         "version": "dev-develop"
     },
     "symfony/asset-mapper": {

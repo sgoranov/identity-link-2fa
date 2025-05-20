@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "180dbe781afdea253543bc2a82f84317",
+    "content-hash": "8b91bd01b2618a46ad6b4f54a448f7d1",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -2281,17 +2281,17 @@
             "time": "2024-09-11T13:17:53+00:00"
         },
         {
-            "name": "sgoranov/php-identity-link-shared",
+            "name": "sgoranov/identity-link-shared",
             "version": "dev-develop",
             "source": {
                 "type": "git",
-                "url": "https://github.com/sgoranov/php-identity-link-shared.git",
-                "reference": "8a6885fc1ec0a51d652e951ceeb767523bb8930b"
+                "url": "https://github.com/sgoranov/identity-link-shared.git",
+                "reference": "2f794ba760d6224bce3031f0af76c13439506273"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sgoranov/php-identity-link-shared/zipball/8a6885fc1ec0a51d652e951ceeb767523bb8930b",
-                "reference": "8a6885fc1ec0a51d652e951ceeb767523bb8930b",
+                "url": "https://api.github.com/repos/sgoranov/identity-link-shared/zipball/2f794ba760d6224bce3031f0af76c13439506273",
+                "reference": "2f794ba760d6224bce3031f0af76c13439506273",
                 "shasum": ""
             },
             "require": {
@@ -2322,22 +2322,22 @@
             },
             "autoload": {
                 "psr-4": {
-                    "sgoranov\\PHPIdentityLinkShared\\": "src/"
+                    "sgoranov\\IdentityLinkShared\\": "src/"
                 }
             },
             "autoload-dev": {
                 "psr-4": {
-                    "sgoranov\\PHPIdentityLinkShared\\Tests\\": "tests/"
+                    "sgoranov\\IdentityLinkShared\\Tests\\": "tests/"
                 }
             },
             "license": [
                 "MIT"
             ],
             "support": {
-                "source": "https://github.com/sgoranov/php-identity-link-shared/tree/develop",
-                "issues": "https://github.com/sgoranov/php-identity-link-shared/issues"
+                "source": "https://github.com/sgoranov/identity-link-shared/tree/develop",
+                "issues": "https://github.com/sgoranov/identity-link-shared/issues"
             },
-            "time": "2025-05-15T11:56:20+00:00"
+            "time": "2025-05-20T06:51:14+00:00"
         },
         {
             "name": "spomky-labs/otphp",
@@ -9301,7 +9301,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "sgoranov/php-identity-link-shared": 20
+        "sgoranov/identity-link-shared": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

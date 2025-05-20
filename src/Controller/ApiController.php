@@ -9,7 +9,7 @@ use App\Repository\AuthRequestRepository;
 use App\Repository\UserSecretRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use sgoranov\PHPIdentityLinkShared\Serializer\Deserializer;
+use sgoranov\IdentityLinkShared\Serializer\Deserializer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;

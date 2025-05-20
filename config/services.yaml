@@ -13,10 +13,10 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
-    sgoranov\PHPIdentityLinkShared\:
-        resource: '../vendor/sgoranov/php-identity-link-shared/src/*'
+    sgoranov\IdentityLinkShared\:
+        resource: '../vendor/sgoranov/identity-link-shared/src/*'
 
-    sgoranov\PHPIdentityLinkShared\Security\AccessTokenHandler:
+    sgoranov\IdentityLinkShared\Security\AccessTokenHandler:
         calls:
             - method: setConfigurationParams
               arguments:

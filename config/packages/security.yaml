@@ -8,7 +8,7 @@ security:
             pattern: ^/api
             stateless: true
             access_token:
-                token_handler: sgoranov\PHPIdentityLinkShared\Security\AccessTokenHandler
+                token_handler: sgoranov\IdentityLinkShared\Security\AccessTokenHandler
 
 
     # Easy way to control access for large sections of your site

@@ -1,15 +1,14 @@
-version: '3.5'
 services:
 
   2fa:
     container_name: 2fa
     privileged: true
     build:
-      context: ${PHP_IDENTITY_LINK_2FA_SOURCE_DIR}
+      context: ${IDENTITY_LINK_2FA_SOURCE_DIR}
     ports:
       - 9003:80
     volumes:
-      - ${PHP_IDENTITY_LINK_2FA_SOURCE_DIR}:/var/www
+      - ${IDENTITY_LINK_2FA_SOURCE_DIR}:/var/www
     extra_hosts:
       - host.docker.internal:${HOST_GW:-host-gateway}
     depends_on:
@@ -19,7 +18,7 @@ services:
 
   database-server:
     container_name: database-server
-    image: postgres:10
+    image: postgres:15
     restart: always
     ports:
       - "9006:5432"
