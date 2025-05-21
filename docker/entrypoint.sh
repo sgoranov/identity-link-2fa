@@ -16,7 +16,7 @@ echo "SELECT 'CREATE DATABASE \"identity-link-2fa\"' WHERE NOT EXISTS (SELECT FR
  | psql -v ON_ERROR_STOP=1
 php bin/console -e dev doctrine:migrations:migrate --no-interaction
 
-echo "SELECT 'CREATE DATABASE \"identity-link-2fa-test\"' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = '\"identity-link-2fa-test\"')\gexec" \
+echo "SELECT 'CREATE DATABASE \"test-identity-link-2fa\"' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = '\"test-identity-link-2fa\"')\gexec" \
  | psql -v ON_ERROR_STOP=1
 php bin/console -e test doctrine:migrations:migrate --no-interaction
 php bin/console -e test -n doctrine:fixtures:load
