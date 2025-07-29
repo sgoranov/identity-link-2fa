@@ -1,0 +1,138 @@
+openapi: 3.0.0
+info:
+  title: 'Identity Link 2FA API'
+  description: 'API documentation for Identity Link 2FA'
+  version: '1.0'
+servers:
+  -
+    url: /2fa
+    description: '2FA API base path'
+paths:
+  '/api/v1/auth/{id}':
+    get:
+      tags:
+        - Auth
+      summary: 'Fetch a valid and non-expired AuthRequest by ID'
+      operationId: 1800d8c4af14f9cd5fc393396ee1a916
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'UUID of the AuthRequest'
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: 'AuthRequest fetched successfully'
+          content:
+            application/json:
+              schema:
+                properties:
+                  response: { properties: { auth: { $ref: '#/components/schemas/AuthRequest' } }, type: object }
+                type: object
+        '404':
+          description: 'AuthRequest not found or expired'
+  /api/v1/auth:
+    post:
+      tags:
+        - Auth
+      summary: 'Create a new AuthRequest'
+      operationId: 74895ee76fceb2fe9d4a044187fc15d7
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthRequest'
+      responses:
+        '201':
+          description: 'AuthRequest created successfully'
+          content:
+            application/json:
+              schema:
+                properties:
+                  response: { properties: { auth: { $ref: '#/components/schemas/AuthRequest' } }, type: object }
+                type: object
+        '400':
+          description: 'Validation failed'
+  '/api/v1/user/{id}/reset-secret':
+    put:
+      tags:
+        - UserSecret
+      summary: 'Reset the secret for a user on next authentication'
+      operationId: 12ef6b268a9202845b8726adbc9abb21
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'User identifier'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'Secret reset flag set successfully'
+          content:
+            application/json:
+              schema:
+                properties:
+                  response: { properties: { result: { type: boolean, example: true } }, type: object }
+                type: object
+        '404':
+          description: 'User not found'
+components:
+  schemas:
+    AuthRequest:
+      title: AuthRequest
+      description: 'AuthRequest entity schema used for both input and output'
+      required:
+        - identifier
+        - created
+        - expired
+      properties:
+        id:
+          description: 'UUID of the auth request'
+          type: string
+          format: uuid
+          readOnly: true
+          example: a1b2c3d4-e5f6-7890-1234-abcdef123456
+        identifier:
+          description: 'Unique identifier for the auth request (e.g., device ID or username)'
+          type: string
+          maxLength: 50
+          example: user_123
+        created:
+          description: 'Date and time when the auth request was created'
+          type: string
+          format: date-time
+          example: '2025-07-30T12:00:00+00:00'
+        expired:
+          description: 'Date and time when the auth request expires'
+          type: string
+          format: date-time
+          example: '2025-07-30T12:05:00+00:00'
+        authenticated:
+          description: 'Date and time when the auth request was successfully authenticated, if any'
+          type: string
+          format: date-time
+          example: '2025-07-30T12:02:00+00:00'
+          nullable: true
+      type: object
+  securitySchemes:
+    bearerAuth:
+      type: http
+      description: 'JWT Bearer token authorization'
+      bearerFormat: JWT
+      scheme: bearer
+security:
+  -
+    bearerAuth: []
+tags:
+  -
+    name: Auth
+    description: Auth
+  -
+    name: UserSecret
+    description: UserSecret

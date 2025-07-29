@@ -8,3 +8,8 @@ api_v1_ping:
     path: /api/v1/ping
     methods: GET
     controller: sgoranov\IdentityLinkShared\Controller\PingController::ping
+
+openapi_yaml:
+    path: /api/v1/openapi.yaml
+    methods: GET
+    controller: sgoranov\IdentityLinkShared\Controller\OpenApiController::openapi

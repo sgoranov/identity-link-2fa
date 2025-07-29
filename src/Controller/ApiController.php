@@ -9,6 +9,7 @@ use App\Repository\AuthRequestRepository;
 use App\Repository\UserSecretRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use OpenApi\Attributes as OA;
 use sgoranov\IdentityLinkShared\Serializer\Deserializer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -31,6 +32,45 @@ final class ApiController extends AbstractController
     }
 
     #[Route('/auth/{id}', name: 'fetch_auth_request', methods: 'GET')]
+    #[OA\Get(
+        path: '/api/v1/auth/{id}',
+        summary: 'Fetch a valid and non-expired AuthRequest by ID',
+        tags: ['Auth'],
+        parameters: [
+            new OA\Parameter(
+                name: 'id',
+                description: 'UUID of the AuthRequest',
+                in: 'path',
+                required: true,
+                schema: new OA\Schema(type: 'string', format: 'uuid')
+            )
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'AuthRequest fetched successfully',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(
+                            property: 'response',
+                            properties: [
+                                new OA\Property(
+                                    property: 'auth',
+                                    ref: '#/components/schemas/AuthRequest'
+                                )
+                            ],
+                            type: 'object'
+                        )
+                    ],
+                    type: 'object'
+                )
+            ),
+            new OA\Response(
+                response: 404,
+                description: 'AuthRequest not found or expired'
+            )
+        ]
+    )]
     public function fetch(string $id): Response
     {
         $authRequest = $this->authRequestRepository->findOneByIdAndNotExpired($id);
@@ -44,6 +84,40 @@ final class ApiController extends AbstractController
     }
 
     #[Route('/auth', name: 'create_auth_request', methods: 'POST')]
+    #[OA\Post(
+        path: '/api/v1/auth',
+        summary: 'Create a new AuthRequest',
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/AuthRequest')
+        ),
+        tags: ['Auth'],
+        responses: [
+            new OA\Response(
+                response: 201,
+                description: 'AuthRequest created successfully',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(
+                            property: 'response',
+                            properties: [
+                                new OA\Property(
+                                    property: 'auth',
+                                    ref: '#/components/schemas/AuthRequest'
+                                )
+                            ],
+                            type: 'object'
+                        )
+                    ],
+                    type: 'object'
+                )
+            ),
+            new OA\Response(
+                response: 400,
+                description: 'Validation failed'
+            )
+        ]
+    )]
     public function create(): Response
     {
         $authRequest = new AuthRequest();
@@ -70,6 +144,46 @@ final class ApiController extends AbstractController
     }
 
     #[Route('/user/{id}/reset-secret', name: 'reset_secret_on_next_auth', methods: 'PUT')]
+    #[OA\Put(
+        path: '/api/v1/user/{id}/reset-secret',
+        summary: 'Reset the secret for a user on next authentication',
+        tags: ['UserSecret'],
+        parameters: [
+            new OA\Parameter(
+                name: 'id',
+                description: 'User identifier',
+                in: 'path',
+                required: true,
+                schema: new OA\Schema(type: 'string')
+            )
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Secret reset flag set successfully',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(
+                            property: 'response',
+                            properties: [
+                                new OA\Property(
+                                    property: 'result',
+                                    type: 'boolean',
+                                    example: true
+                                )
+                            ],
+                            type: 'object'
+                        )
+                    ],
+                    type: 'object'
+                )
+            ),
+            new OA\Response(
+                response: 404,
+                description: 'User not found'
+            )
+        ]
+    )]
     public function resetSecretOnNextAuth(string $id): Response
     {
         /** @var UserSecret $userSecret */

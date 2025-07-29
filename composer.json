@@ -88,7 +88,8 @@
         "symfony/maker-bundle": "^1.0",
         "symfony/phpunit-bridge": "^7.1",
         "symfony/stopwatch": "6.4.*",
-        "symfony/web-profiler-bundle": "6.4.*"
+        "symfony/web-profiler-bundle": "6.4.*",
+        "zircote/swagger-php": "^5.1"
     },
     "repositories": [
         {

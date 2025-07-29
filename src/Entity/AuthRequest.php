@@ -6,10 +6,57 @@ namespace App\Entity;
 use App\Repository\AuthRequestRepository;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use OpenApi\Attributes as OA;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: AuthRequestRepository::class)]
+#[OA\Schema(
+    schema: 'AuthRequest',
+    title: 'AuthRequest',
+    description: 'AuthRequest entity schema used for both input and output',
+    required: ['identifier', 'created', 'expired'],
+    properties: [
+        new OA\Property(
+            property: 'id',
+            description: 'UUID of the auth request',
+            type: 'string',
+            format: 'uuid',
+            readOnly: true,
+            example: 'a1b2c3d4-e5f6-7890-1234-abcdef123456'
+        ),
+        new OA\Property(
+            property: 'identifier',
+            description: 'Unique identifier for the auth request (e.g., device ID or username)',
+            type: 'string',
+            maxLength: 50,
+            example: 'user_123'
+        ),
+        new OA\Property(
+            property: 'created',
+            description: 'Date and time when the auth request was created',
+            type: 'string',
+            format: 'date-time',
+            example: '2025-07-30T12:00:00+00:00'
+        ),
+        new OA\Property(
+            property: 'expired',
+            description: 'Date and time when the auth request expires',
+            type: 'string',
+            format: 'date-time',
+            example: '2025-07-30T12:05:00+00:00'
+        ),
+        new OA\Property(
+            property: 'authenticated',
+            description: 'Date and time when the auth request was successfully authenticated, if any',
+            type: 'string',
+            format: 'date-time',
+            example: '2025-07-30T12:02:00+00:00',
+            nullable: true
+        )
+    ],
+    type: 'object'
+)]
 class AuthRequest
 {
 
