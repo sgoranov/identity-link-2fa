@@ -33,6 +33,24 @@ use OpenApi\Attributes as OA;
         ]
     )
 )]
+#[OA\PathItem(
+    path: "/api/v1/ping",
+    get: new OA\Get(
+        description: "Returns 'pong' if the service is alive.",
+        summary: "Health check endpoint",
+        tags: ["Health"],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: "Pong response",
+                content: new OA\JsonContent(
+                    type: "string",
+                    example: "pong"
+                )
+            )
+        ]
+    )
+)]
 final class OpenApiInfo
 {
 }
