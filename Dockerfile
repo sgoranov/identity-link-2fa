@@ -16,6 +16,9 @@ RUN apt-get update && apt-get -y upgrade && DEBIAN_FRONTEND=noninteractive apt-g
     ca-certificates \
     gnupg \
     postgresql-client \
+    unzip \
+    zip \
+    libzip-dev \
     php \
     php-fpm \
     php-pgsql \
@@ -23,11 +26,8 @@ RUN apt-get update && apt-get -y upgrade && DEBIAN_FRONTEND=noninteractive apt-g
     php-xdebug \
     php-curl \
     php-gd \
+    php-zip \
     composer
-
-# Install symfony cli
-RUN curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | sudo -E bash
-RUN apt install symfony-cli
 
 # Apache configuration
 RUN a2enmod rewrite
