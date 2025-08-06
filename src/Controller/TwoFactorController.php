@@ -24,7 +24,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class TwoFactorController extends AbstractController
+final class TwoFactorController extends AbstractController
 {
     public function __construct(
         private readonly ParameterBagInterface $parameterBag,
