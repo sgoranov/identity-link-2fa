@@ -45,7 +45,7 @@ final class TwoFactorController extends AbstractController
         }
 
         /** @var UserSecret $userSecret */
-        $userSecret = $this->userSecretRepository->findOneBy(['identifier' => $authRequest->getIdentifier()]);
+        $userSecret = $this->userSecretRepository->findOneBy(['userId' => $authRequest->getUserId()]);
         if ($userSecret === null || $userSecret->isResetSecretOnNextAuth()) {
             return $this->redirectToRoute('2fa_enroll', ['id' => $id]);
         }
@@ -65,7 +65,9 @@ final class TwoFactorController extends AbstractController
                 $this->entityManager->persist($authRequest);
                 $this->entityManager->flush();
 
-                return new RedirectResponse($this->parameterBag->get('redirect_uri'));
+                return new RedirectResponse(
+                    $this->appendQueryParam($authRequest->getRedirectUri(), 'id', $authRequest->getId())
+                );
 
             } else {
                 $this->addFlash(
@@ -91,7 +93,7 @@ final class TwoFactorController extends AbstractController
         }
 
         /** @var UserSecret $userSecret */
-        $userSecret = $this->userSecretRepository->findOneBy(['identifier' => $authRequest->getIdentifier()]);
+        $userSecret = $this->userSecretRepository->findOneBy(['userId' => $authRequest->getUserId()]);
         if ($userSecret !== null && $userSecret->isResetSecretOnNextAuth() === false) {
             throw new BadRequestException();
         }
@@ -99,12 +101,12 @@ final class TwoFactorController extends AbstractController
         if ($userSecret === null) {
             $userSecret = new UserSecret();
             $userSecret->setCreated(new DateTime());
-            $userSecret->setIdentifier($authRequest->getIdentifier());
+            $userSecret->setUserId($authRequest->getUserId());
         }
 
         // Generate the secret and QR code
         $totp = TOTP::create();
-        $totp->setLabel($userSecret->getIdentifier());
+        $totp->setLabel($userSecret->getUserId());
         $totp->setIssuer($this->parameterBag->get('issuer'));
 
         $secret = $totp->getSecret();
@@ -144,4 +146,35 @@ final class TwoFactorController extends AbstractController
             'id' => $id,
         ]);
     }
+
+    private function appendQueryParam(string $url, string $name, string $value): string
+    {
+        // Separate and preserve fragment (#...)
+        $fragment = '';
+        $hashPos = strpos($url, '#');
+        if ($hashPos !== false) {
+            $fragment = substr($url, $hashPos); // includes '#...'
+            $url = substr($url, 0, $hashPos);
+        }
+
+        // If URL already has a query, parse and replace; otherwise just append
+        $parts = parse_url($url);
+        if ($parts !== false && isset($parts['query'])) {
+            parse_str($parts['query'], $params);
+            $params[$name] = $value;
+
+            $query = http_build_query($params, arg_separator: '&', encoding_type: PHP_QUERY_RFC3986);
+            $base = substr($url, 0, strpos($url, '?')) ?: $url;
+
+            return $base . ($query === '' ? '' : '?' . $query) . $fragment;
+        }
+
+        // No query yet: append with the correct separator
+        $separator = str_contains($url, '?') ? '&' : '?';
+        return $url
+            . $separator
+            . rawurlencode($name) . '=' . rawurlencode($value)
+            . $fragment;
+    }
+
 }

@@ -82,7 +82,7 @@ paths:
         -
           name: id
           in: path
-          description: 'User identifier'
+          description: 'User userId'
           required: true
           schema:
             type: string
@@ -103,7 +103,7 @@ components:
       title: AuthRequest
       description: 'AuthRequest entity schema used for both input and output'
       required:
-        - identifier
+        - userId
         - created
         - expired
       properties:
@@ -113,8 +113,8 @@ components:
           format: uuid
           readOnly: true
           example: a1b2c3d4-e5f6-7890-1234-abcdef123456
-        identifier:
-          description: 'Unique identifier for the auth request (e.g., device ID or username)'
+        userId:
+          description: 'Unique userId for the auth request (e.g., device ID or username)'
           type: string
           maxLength: 50
           example: user_123

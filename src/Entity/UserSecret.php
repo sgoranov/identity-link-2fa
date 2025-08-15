@@ -21,7 +21,7 @@ class UserSecret
     #[ORM\Column(type: "text", unique: true)]
     #[Assert\NotBlank]
     #[Assert\Length(min: 1, max: 50)]
-    private string $identifier;
+    private string $userId;
 
     #[ORM\Column(type: "text")]
     private string $secret;
@@ -42,14 +42,14 @@ class UserSecret
         $this->id = $id;
     }
 
-    public function getIdentifier(): string
+    public function getUserId(): string
     {
-        return $this->identifier;
+        return $this->userId;
     }
 
-    public function setIdentifier(string $identifier): void
+    public function setUserId(string $userId): void
     {
-        $this->identifier = $identifier;
+        $this->userId = $userId;
     }
 
     public function getSecret(): string

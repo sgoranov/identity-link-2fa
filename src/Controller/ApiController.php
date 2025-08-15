@@ -133,7 +133,7 @@ final class ApiController extends AbstractController
         $authRequest->setAuthenticated(null);
 
         // mark all previous non expired requests as expired
-        $this->authRequestRepository->updateExpiredToNow($authRequest->getIdentifier());
+        $this->authRequestRepository->updateExpiredToNow($authRequest->getUserId());
 
         $this->entityManager->persist($authRequest);
         $this->entityManager->flush();
@@ -151,7 +151,7 @@ final class ApiController extends AbstractController
         parameters: [
             new OA\Parameter(
                 name: 'id',
-                description: 'User identifier',
+                description: 'User userId',
                 in: 'path',
                 required: true,
                 schema: new OA\Schema(type: 'string')
@@ -187,7 +187,7 @@ final class ApiController extends AbstractController
     public function resetSecretOnNextAuth(string $id): Response
     {
         /** @var UserSecret $userSecret */
-        $userSecret = $this->userSecretRepository->findOneBy(['identifier' => $id]);
+        $userSecret = $this->userSecretRepository->findOneBy(['userId' => $id]);
         if ($userSecret === null) {
             throw new NotFoundHttpException();
         }

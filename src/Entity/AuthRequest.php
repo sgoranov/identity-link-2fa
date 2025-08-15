@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     schema: 'AuthRequest',
     title: 'AuthRequest',
     description: 'AuthRequest entity schema used for both input and output',
-    required: ['identifier', 'created', 'expired'],
+    required: ['userId', 'created', 'expired'],
     properties: [
         new OA\Property(
             property: 'id',
@@ -26,8 +26,8 @@ use Symfony\Component\Validator\Constraints as Assert;
             example: 'a1b2c3d4-e5f6-7890-1234-abcdef123456'
         ),
         new OA\Property(
-            property: 'identifier',
-            description: 'Unique identifier for the auth request (e.g., device ID or username)',
+            property: 'userId',
+            description: 'Unique userId for the auth request (e.g., device ID or username)',
             type: 'string',
             maxLength: 50,
             example: 'user_123'
@@ -70,7 +70,14 @@ class AuthRequest
     #[ORM\Column(type: "text")]
     #[Assert\NotBlank(groups: ['create'])]
     #[Assert\Length(min: 1, max: 50, groups: ['create'])]
-    private string $identifier;
+    private string $userId;
+
+    #[Groups(['create'])]
+    #[ORM\Column(type: 'text')]
+    #[Assert\NotBlank(groups: ['create'])]
+    #[Assert\Length(min: 1, max: 2048, groups: ['create'])]
+    #[Assert\Url(protocols: ['http', 'https'], groups: ['create'])]
+    private string $redirectUri;
 
     #[ORM\Column]
     private DateTime $created;
@@ -86,14 +93,24 @@ class AuthRequest
         return $this->id;
     }
 
-    public function getIdentifier(): string
+    public function getUserId(): string
     {
-        return $this->identifier;
+        return $this->userId;
     }
 
-    public function setIdentifier(string $identifier): void
+    public function setUserId(string $userId): void
     {
-        $this->identifier = $identifier;
+        $this->userId = $userId;
+    }
+
+    public function getRedirectUri(): string
+    {
+        return $this->redirectUri;
+    }
+
+    public function setRedirectUri(string $redirectUri): void
+    {
+        $this->redirectUri = $redirectUri;
     }
 
     public function getCreated(): DateTime
