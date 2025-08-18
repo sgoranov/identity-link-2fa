@@ -4,6 +4,11 @@ controllers:
         namespace: App\Controller
     type: attribute
 
+switch_locale:
+  methods: [GET]
+  path: /switch-locale/{locale}
+  controller: sgoranov\IdentityLinkShared\Controller\LocaleController::switchLocale
+
 api_v1_ping:
     path: /api/v1/ping
     methods: GET

@@ -1,9 +1,35 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-    <h1>Enroll in Two-Factor Authentication</h1>
-    <p>Scan the QR code with your Google Authenticator app:</p>
-    <img src="{{ qrCode }}" alt="QR Code">
-    <p>Or enter this code manually: <strong>{{ secret }}</strong></p>
-    <p>When you are ready, you can go to the <a href="{{ path('2fa_verify', { 'id': id }) }}">verification page</a>.</p>
+    <div class="container mx-auto max-w-md p-4 bg-white rounded-lg shadow-md text-center">
+
+        <h1 class="text-xl sm:text-2xl font-bold mb-4 break-words">
+            {{ 'enroll.title'|trans }}
+        </h1>
+
+        <p class="mb-4 text-sm sm:text-base break-words">
+            {{ 'enroll.instructions'|trans({'%app%': 'Google Authenticator'}) }}
+        </p>
+
+        <div class="mb-4 flex justify-center flex-wrap">
+            <img src="{{ qrCode }}"
+                 alt="{{ 'enroll.qr_alt'|trans }}"
+                 class="w-48 sm:w-64 max-w-full border rounded-md p-2 bg-gray-50">
+        </div>
+
+        <p class="mb-4 text-xs sm:text-sm s">
+            {{ 'enroll.manual_code'|trans }}:
+            <strong class="inline-block" style="word-wrap: break-word">{{ secret }}</strong>
+        </p>
+
+        <p class="mb-6 text-sm sm:text-base break-words">
+            {{ 'enroll.verification_prompt'|trans }}
+        </p>
+
+        <a href="{{ path('2fa_verify', { 'id': id }) }}"
+           class="inline-block px-6 py-3 bg-blue-600 rounded-lg font-semibold hover:bg-blue-700 transition text-sm sm:text-base">
+            {{ 'enroll.verify_button'|trans }}
+        </a>
+
+    </div>
 {% endblock %}

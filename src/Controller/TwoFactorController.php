@@ -14,6 +14,7 @@ use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\Label\Font\NotoSans;
 use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Writer\Result\ResultInterface;
 use OTPHP\TOTP;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -23,6 +24,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class TwoFactorController extends AbstractController
 {
@@ -31,7 +33,7 @@ final class TwoFactorController extends AbstractController
         private readonly AuthRequestRepository $authRequestRepository,
         private readonly UserSecretRepository $userSecretRepository,
         private readonly EntityManagerInterface $entityManager,
-        private readonly ValidatorInterface $validator,
+        private readonly TranslatorInterface $translator,
     )
     {
     }
@@ -65,14 +67,15 @@ final class TwoFactorController extends AbstractController
                 $this->entityManager->persist($authRequest);
                 $this->entityManager->flush();
 
+                $separator = str_contains($authRequest->getRedirectUri(), '?') ? '&' : '?';
                 return new RedirectResponse(
-                    $this->appendQueryParam($authRequest->getRedirectUri(), 'id', $authRequest->getId())
+                    $authRequest->getRedirectUri() . $separator . 'id=' . urlencode($authRequest->getId())
                 );
 
             } else {
                 $this->addFlash(
                     'danger',
-                    'Invalid code. Please try again.'
+                    $this->translator->trans('two_factor.invalid_code')
                 );
 
                 return $this->redirectToRoute('2fa_verify', ['id' => $id]);
@@ -92,89 +95,64 @@ final class TwoFactorController extends AbstractController
             throw new BadRequestException('Invalid authorization request');
         }
 
+        $totp = TOTP::create();
+
         /** @var UserSecret $userSecret */
         $userSecret = $this->userSecretRepository->findOneBy(['userId' => $authRequest->getUserId()]);
-        if ($userSecret !== null && $userSecret->isResetSecretOnNextAuth() === false) {
-            throw new BadRequestException();
-        }
+        if ($userSecret !== null) {
+            if ($userSecret->isResetSecretOnNextAuth()) {
+                // with the secret, reset created to now
+                $userSecret->setCreated(new DateTime());
+                $userSecret->setResetSecretOnNextAuth(false);
+                $userSecret->setSecret($this->generateSecret($totp, $userSecret->getUserId()));
 
-        if ($userSecret === null) {
+            } else if ($userSecret->getCreated()->add(new \DateInterval('PT10M')) >= $authRequest->getCreated()) {
+                $totp->setSecret($userSecret->getSecret());
+                $totp->setLabel($userSecret->getUserId());
+                $totp->setIssuer($this->parameterBag->get('issuer'));
+            } else {
+                // in case the user already has a secret, and secret reset was not requested, and the
+                // secret is not created as with the current authorization request, then throw an exception
+                throw new BadRequestException();
+            }
+
+        } else {
             $userSecret = new UserSecret();
             $userSecret->setCreated(new DateTime());
             $userSecret->setUserId($authRequest->getUserId());
-        }
-
-        // Generate the secret and QR code
-        $totp = TOTP::create();
-        $totp->setLabel($userSecret->getUserId());
-        $totp->setIssuer($this->parameterBag->get('issuer'));
-
-        $secret = $totp->getSecret();
-
-        $qrCodeUrl = $totp->getProvisioningUri();
-
-        $qrCode = Builder::create()
-            ->writer(new PngWriter())
-            ->data($qrCodeUrl)
-            ->encoding(new Encoding('UTF-8'))
-            ->backgroundColor(new Color(255, 255, 255, 127))
-            ->size(300)
-            ->margin(10)
-            ->labelText('Scan the code')
-            ->labelFont(new NotoSans(20))
-            ->build();
-
-        // update the secret and set reset on next auth to false
-        $userSecret->setResetSecretOnNextAuth(false);
-        $userSecret->setSecret($secret);
-
-        // validate the entity upon persist
-        $errors = $this->validator->validate($userSecret);
-        if (count($errors) > 0) {
-            list($error) = $errors;
-
-            return new Response($error->getPropertyPath() . ': ' . $error->getMessage(),
-                Response::HTTP_BAD_REQUEST);
+            $userSecret->setResetSecretOnNextAuth(false);
+            $userSecret->setSecret($this->generateSecret($totp, $userSecret->getUserId()));
         }
 
         $this->entityManager->persist($userSecret);
         $this->entityManager->flush();
 
         return $this->render('two_factor/enroll.html.twig', [
-            'secret' => $secret,
-            'qrCode' => $qrCode->getDataUri(),
+            'secret' => $userSecret->getSecret(),
+            'qrCode' => $this->generateQrCode($totp)->getDataUri(),
             'id' => $id,
         ]);
     }
 
-    private function appendQueryParam(string $url, string $name, string $value): string
+    private function generateQrCode(TOTP $totp): ResultInterface
     {
-        // Separate and preserve fragment (#...)
-        $fragment = '';
-        $hashPos = strpos($url, '#');
-        if ($hashPos !== false) {
-            $fragment = substr($url, $hashPos); // includes '#...'
-            $url = substr($url, 0, $hashPos);
-        }
-
-        // If URL already has a query, parse and replace; otherwise just append
-        $parts = parse_url($url);
-        if ($parts !== false && isset($parts['query'])) {
-            parse_str($parts['query'], $params);
-            $params[$name] = $value;
-
-            $query = http_build_query($params, arg_separator: '&', encoding_type: PHP_QUERY_RFC3986);
-            $base = substr($url, 0, strpos($url, '?')) ?: $url;
-
-            return $base . ($query === '' ? '' : '?' . $query) . $fragment;
-        }
-
-        // No query yet: append with the correct separator
-        $separator = str_contains($url, '?') ? '&' : '?';
-        return $url
-            . $separator
-            . rawurlencode($name) . '=' . rawurlencode($value)
-            . $fragment;
+        return Builder::create()
+            ->writer(new PngWriter())
+            ->data($totp->getProvisioningUri())
+            ->encoding(new Encoding('UTF-8'))
+            ->backgroundColor(new Color(255, 255, 255, 127))
+            ->size(300)
+            ->margin(10)
+            ->labelText($this->translator->trans('enroll.scan'))
+            ->labelFont(new NotoSans(20))
+            ->build();
     }
 
+    private function generateSecret(TOTP $totp, string $userId): string
+    {
+        $totp->setLabel($userId);
+        $totp->setIssuer($this->parameterBag->get('issuer'));
+
+        return $totp->getSecret();
+    }
 }

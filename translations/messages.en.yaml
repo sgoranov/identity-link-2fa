@@ -1,0 +1,15 @@
+enroll:
+  title: "Enable Two-Factor Authentication (2FA)"
+  instructions: "To secure your account, scan the QR code below with your %app% or any TOTP app."
+  qr_alt: "QR Code for 2FA setup"
+  manual_code: "If you cannot scan the QR code, enter this code manually in your app"
+  verification_prompt: "Once you've added this to your app, proceed to verify your setup:"
+  verify_button: "Go to Verification"
+  scan: "'Scan the code"
+
+two_factor:
+  title: "Two-factor verification"
+  instructions: "Please enter the 6-digit code from your authenticator app."
+  verify_button: "Verify"
+  invalid_code: "Invalid code. Please try again."
+  verified_success: "Your code has been verified successfully."
