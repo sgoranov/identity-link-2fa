@@ -13,4 +13,5 @@ return [
     Symfony\Bundle\MakerBundle\MakerBundle::class => ['dev' => true],
     sgoranov\IdentityLinkShared\IdentityLinkSharedBundle::class => ['all' => true],
     Nelmio\CorsBundle\NelmioCorsBundle::class => ['dev' => true],
+    Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle::class => ['dev' => true, 'test' => true],
 ];

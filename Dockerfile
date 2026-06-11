@@ -1,3 +1,29 @@
+# syntax=docker/dockerfile:1
+FROM php:8.5-cli-bookworm AS test
+
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    libzip-dev \
+    unzip \
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    libpng-dev \
+    libwebp-dev
+
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
+    && docker-php-ext-install zip pdo_pgsql gd
+
+RUN pecl install xdebug redis && docker-php-ext-enable xdebug redis
+
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+WORKDIR /app
+COPY . .
+
+RUN composer install --no-interaction --no-scripts --no-progress
+
+CMD ["vendor/bin/phpunit"]
+
 FROM dunglas/frankenphp:1-php8.5-bookworm AS base
 
 RUN install-php-extensions \

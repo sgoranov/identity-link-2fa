@@ -3,6 +3,7 @@
 ![License](https://img.shields.io/github/license/sgoranov/identity-link-2fa)
 ![Last Commit](https://img.shields.io/github/last-commit/sgoranov/identity-link-2fa)
 ![Issues](https://img.shields.io/github/issues/sgoranov/identity-link-2fa)
+[![PHPUnit Tests](https://github.com/sgoranov/identity-link-2fa/actions/workflows/phpunit.yml/badge.svg)](https://github.com/sgoranov/identity-link-2fa/actions/workflows/phpunit.yml)
 [![Security Audit](https://github.com/sgoranov/identity-link-2fa/actions/workflows/vulnerability-scan.yml/badge.svg)](https://github.com/sgoranov/identity-link-2fa/actions/workflows/vulnerability-scan.yml)
 
 This project provides Two-Factor Authentication (2FA) support for the 
