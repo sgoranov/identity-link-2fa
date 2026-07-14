@@ -9,8 +9,8 @@
         "ext-ctype": "*",
         "ext-gd": "*",
         "ext-iconv": "*",
-        "doctrine/doctrine-bundle": "^2.12",
-        "doctrine/doctrine-migrations-bundle": "^3.3",
+        "doctrine/doctrine-bundle": "^3",
+        "doctrine/doctrine-migrations-bundle": "^3",
         "doctrine/orm": "^3",
         "endroid/qr-code": "^5.0",
         "sgoranov/identity-link-shared": "dev-develop",
@@ -83,9 +83,9 @@
         }
     },
     "require-dev": {
-        "dama/doctrine-test-bundle": "^8.4",
-        "doctrine/doctrine-fixtures-bundle": "^4.3",
-        "phpunit/phpunit": "^10.5",
+        "dama/doctrine-test-bundle": "^8",
+        "doctrine/doctrine-fixtures-bundle": "^4",
+        "phpunit/phpunit": "^10",
         "symfony/browser-kit": "6.4.*",
         "symfony/css-selector": "6.4.*",
         "symfony/debug-bundle": "6.4.*",
