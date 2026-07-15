@@ -15,11 +15,7 @@ class TwoFaSecretType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('code', TextType::class)
-            ->add('submit', SubmitType::class, [
-                'label' => 'two_factor.verify_button',
-                'translation_domain' => 'messages',
-            ]);
+            ->add('code', TextType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

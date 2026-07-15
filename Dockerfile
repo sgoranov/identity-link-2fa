@@ -13,11 +13,15 @@ RUN apt-get update && apt-get install -y \
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install zip pdo_pgsql gd
 
-RUN pecl install xdebug redis && docker-php-ext-enable xdebug redis
+RUN pecl install xdebug && docker-php-ext-enable xdebug
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /app
+
+ENV APP_ENV=test
+ENV DB_USER=dummy
+ENV DB_PASSWORD=dummy
 
 COPY . .
 RUN composer install --no-interaction --no-scripts --no-progress
@@ -30,7 +34,6 @@ RUN install-php-extensions \
     gd \
     pgsql \
     pdo_pgsql \
-    redis \
     zip
 
 ENV SERVER_NAME=":9003"

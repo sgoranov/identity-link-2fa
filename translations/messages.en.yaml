@@ -5,7 +5,7 @@ enroll:
   manual_code: "If you cannot scan the QR code, enter this code manually in your app"
   verification_prompt: "Once you've added this to your app, proceed to verify your setup:"
   verify_button: "Go to Verification"
-  scan: "'Scan the code"
+  scan: "Scan the code"
 
 two_factor:
   title: "Two-factor verification"
