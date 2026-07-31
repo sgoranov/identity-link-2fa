@@ -42,3 +42,7 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+
+    sgoranov\IdentityLinkShared\EventListener\RequestResponseLogger:
+        arguments:
+            $logger: '@monolog.logger.rest'
