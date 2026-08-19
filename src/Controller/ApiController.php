@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/api/v1', name: 'api_v1_')]
@@ -71,6 +72,7 @@ final class ApiController extends AbstractController
             )
         ]
     )]
+    #[IsGranted('2fa.read')]
     public function fetch(string $id): Response
     {
         $authRequest = $this->authRequestRepository->findOneByIdAndNotExpired($id);
@@ -118,6 +120,7 @@ final class ApiController extends AbstractController
             )
         ]
     )]
+    #[IsGranted('2fa.write')]
     public function create(): Response
     {
         $authRequest = new AuthRequest();
@@ -184,6 +187,7 @@ final class ApiController extends AbstractController
             )
         ]
     )]
+    #[IsGranted('2fa.reset')]
     public function resetSecretOnNextAuth(string $id): Response
     {
         /** @var UserSecret $userSecret */
