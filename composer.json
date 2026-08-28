@@ -13,7 +13,7 @@
         "doctrine/doctrine-migrations-bundle": "^3",
         "doctrine/orm": "^3",
         "endroid/qr-code": "^5.0",
-        "sgoranov/identity-link-shared": "dev-develop",
+        "sgoranov/identity-link-shared": "^1.0.0",
         "spomky-labs/otphp": "^11.3",
         "symfony/asset": "6.4.*",
         "symfony/asset-mapper": "6.4.*",

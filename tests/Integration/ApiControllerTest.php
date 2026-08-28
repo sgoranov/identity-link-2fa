@@ -16,7 +16,7 @@ final class ApiControllerTest extends WebTestCase
     public function testFetchAuthRequestSuccess(): void
     {
         $client = static::createClient();
-        $testUser = new User('test_admin', ['ROLE_ADMIN']);
+        $testUser = new User('test_admin', ['2fa.read']);
         $client->loginUser($testUser);
         $container = $client->getContainer();
         $router = $container->get(RouterInterface::class);
@@ -41,7 +41,7 @@ final class ApiControllerTest extends WebTestCase
     public function testFetchAuthRequestNotFound(): void
     {
         $client = static::createClient();
-        $testUser = new User('test_admin', ['ROLE_ADMIN']);
+        $testUser = new User('test_admin', ['2fa.read']);
         $client->loginUser($testUser);
         $router = $client->getContainer()->get(RouterInterface::class);
 
@@ -54,7 +54,7 @@ final class ApiControllerTest extends WebTestCase
     public function testCreateAuthRequestSuccess(): void
     {
         $client = static::createClient();
-        $testUser = new User('test_admin', ['ROLE_ADMIN']);
+        $testUser = new User('test_admin', ['2fa.write']);
         $client->loginUser($testUser);
         $router = $client->getContainer()->get(RouterInterface::class);
 
@@ -86,7 +86,7 @@ final class ApiControllerTest extends WebTestCase
     public function testResetSecretOnNextAuthSuccess(): void
     {
         $client = static::createClient();
-        $testUser = new User('test_admin', ['ROLE_ADMIN']);
+        $testUser = new User('test_admin', ['2fa.reset']);
         $client->loginUser($testUser);
         $container = $client->getContainer();
         $router = $container->get(RouterInterface::class);
@@ -114,7 +114,7 @@ final class ApiControllerTest extends WebTestCase
     public function testResetSecretOnNextAuthUserNotFound(): void
     {
         $client = static::createClient();
-        $testUser = new User('test_admin', ['ROLE_ADMIN']);
+        $testUser = new User('test_admin', ['2fa.reset']);
         $client->loginUser($testUser);
         $router = $client->getContainer()->get(RouterInterface::class);
 
