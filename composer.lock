@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "670cbd34c27ae2a39d65da9253a5a5b3",
+    "content-hash": "a1ce7cd9be9e44c8ff2d55126602af51",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -2155,16 +2155,16 @@
         },
         {
             "name": "sgoranov/identity-link-shared",
-            "version": "1.0.0",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sgoranov/identity-link-shared.git",
-                "reference": "03b4fcef057838dfe4ca6524a555e418acb70fbf"
+                "reference": "5dbfc1fcf05ce636d154394c370102b4da2fe46d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sgoranov/identity-link-shared/zipball/03b4fcef057838dfe4ca6524a555e418acb70fbf",
-                "reference": "03b4fcef057838dfe4ca6524a555e418acb70fbf",
+                "url": "https://api.github.com/repos/sgoranov/identity-link-shared/zipball/5dbfc1fcf05ce636d154394c370102b4da2fe46d",
+                "reference": "5dbfc1fcf05ce636d154394c370102b4da2fe46d",
                 "shasum": ""
             },
             "require": {
@@ -2233,10 +2233,10 @@
                 "MIT"
             ],
             "support": {
-                "source": "https://github.com/sgoranov/identity-link-shared/tree/1.0.0",
+                "source": "https://github.com/sgoranov/identity-link-shared/tree/develop",
                 "issues": "https://github.com/sgoranov/identity-link-shared/issues"
             },
-            "time": "2026-08-13T07:41:58+00:00"
+            "time": "2026-09-30T10:49:59+00:00"
         },
         {
             "name": "spomky-labs/otphp",
@@ -10043,7 +10043,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {},
+    "stability-flags": {
+        "sgoranov/identity-link-shared": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
