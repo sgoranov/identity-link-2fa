@@ -16,6 +16,7 @@ use Endroid\QrCode\Label\Font\NotoSans;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\Result\ResultInterface;
 use OTPHP\TOTP;
+use Psr\Clock\ClockInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
@@ -23,7 +24,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class TwoFactorController extends AbstractController
@@ -34,6 +34,7 @@ final class TwoFactorController extends AbstractController
         private readonly UserSecretRepository $userSecretRepository,
         private readonly EntityManagerInterface $entityManager,
         private readonly TranslatorInterface $translator,
+        private readonly ClockInterface $clock,
     )
     {
     }
@@ -57,7 +58,7 @@ final class TwoFactorController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $totp = TOTP::create($userSecret->getSecret());
+            $totp = TOTP::create($userSecret->getSecret(), clock: $this->clock);
 
             if ($totp->verify($form->get('code')->getData())) {
 
@@ -95,7 +96,7 @@ final class TwoFactorController extends AbstractController
             throw new BadRequestException('Invalid authorization request');
         }
 
-        $totp = TOTP::create();
+        $totp = TOTP::create(clock: $this->clock);
 
         /** @var UserSecret $userSecret */
         $userSecret = $this->userSecretRepository->findOneBy(['userId' => $authRequest->getUserId()]);

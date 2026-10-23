@@ -11,13 +11,16 @@ use OTPHP\TOTP;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\Clock\NativeClock;
+use Symfony\Component\Clock\Clock;
+use Symfony\Component\Clock\Test\ClockSensitiveTrait;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class TwoFactorControllerTest extends WebTestCase
 {
+    use ClockSensitiveTrait;
+
     private const USER_ID = 'two-factor-user';
     private const SECRET = 'JBSWY3DPEHPK3PXP';
 
@@ -25,6 +28,10 @@ final class TwoFactorControllerTest extends WebTestCase
 
     protected function setUp(): void
     {
+        // Freeze the clock that TOTP codes are generated and verified with, so a code cannot expire mid-test.
+        // The time is in the past, so the tests also fail if the controller stops using the injected clock.
+        self::mockTime('2020-01-01 12:00:00');
+
         // The session cookie is secure, so the browser only sends it back over HTTPS
         $this->client = static::createClient([], ['HTTPS' => 'on']);
     }
@@ -203,15 +210,7 @@ final class TwoFactorControllerTest extends WebTestCase
 
     private function currentCode(string $secret): string
     {
-        $totp = TOTP::create($secret, clock: new NativeClock());
-
-        // Wait for the next code if this one is about to expire, so that it is still valid when it is verified
-        $expiresIn = $totp->expiresIn();
-        if ($expiresIn <= 3) {
-            sleep($expiresIn);
-        }
-
-        return $totp->now();
+        return TOTP::create($secret, clock: Clock::get())->now();
     }
 
     private function createAuthRequest(
