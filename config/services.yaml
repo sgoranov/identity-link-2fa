@@ -11,7 +11,6 @@ parameters:
     fallback_db_user: '%env(DB_USER)%'
     fallback_db_password: '%env(DB_PASSWORD)%'
     issuer: '%env(TWO_FA_ISSUER)%'
-    redirect_uri: '%env(TWO_FA_REDIRECT_URI)%'
 
 services:
     # default configuration for services in *this* file
