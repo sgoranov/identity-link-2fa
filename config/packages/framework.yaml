@@ -1,10 +1,6 @@
 # see https://symfony.com/doc/current/reference/configuration/framework.html
 framework:
     secret: '%env(default:fallback_app_secret:file:APP_SECRET_FILE)%'
-    #csrf_protection: true
-    annotations: false
-    http_method_override: false
-    handle_all_throwables: true
     trusted_proxies: '%env(TRUSTED_PROXIES)%'
     trusted_headers:
         - x-forwarded-for
@@ -13,8 +9,7 @@ framework:
         - x-forwarded-port
         - x-forwarded-prefix
 
-    # Enables session support. Note that the session will ONLY be started if you read or write from it.
-    # Remove or comment this section to explicitly disable session support.
+    # Note that the session will be started ONLY if you read or write from it.
     session:
         name: PHPSESSID_2FA
         handler_id: '%env(REDIS_DSN)%'
@@ -26,8 +21,6 @@ framework:
 
     #esi: true
     #fragments: true
-    php_errors:
-        log: true
 
 when@test:
     framework:
