@@ -34,6 +34,7 @@ RUN install-php-extensions \
     gd \
     pgsql \
     pdo_pgsql \
+    redis \
     zip
 
 ENV SERVER_NAME=":9003"
