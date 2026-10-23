@@ -84,8 +84,12 @@ otherwise the request is rejected with `403 Forbidden`.
 5. The caller fetches the auth request with `GET /api/v1/auth/{id}`. Its `authenticated` field holds the time the
    user entered a valid code, or `null` if they have not.
 
-The pages are translated into English and Bulgarian. Translations in `local_theme/translations/` override those in
-`translations/`.
+The pages are translated into English and Bulgarian. To change how they look without modifying the service, put
+files in `local_theme/`, whose contents are ignored by Git:
+
+- templates in `local_theme/templates/` take precedence over those in `templates/`
+- translations in `local_theme/translations/` override those in `translations/`
+- files in `local_theme/public/` are served under `/theme/`
 
 ## OpenAPI specification
 
