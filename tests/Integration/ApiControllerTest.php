@@ -6,6 +6,7 @@ namespace App\Tests\Integration;
 use App\DataFixtures\AppFixtures;
 use App\Entity\AuthRequest;
 use App\Entity\UserSecret;
+use App\Repository\AuthRequestRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -118,6 +119,10 @@ final class ApiControllerTest extends WebTestCase
         $entityManager->clear();
         $now = new DateTime();
         $this->assertLessThanOrEqual($now, $entityManager->find(AuthRequest::class, $earlierRequest->getId())->getExpired());
+
+        // Expired immediately, not only once the current second has passed
+        $repository = $container->get(AuthRequestRepository::class);
+        $this->assertNull($repository->findOneByIdAndNotExpired($earlierRequest->getId()));
 
         // Pending requests of other users are left alone
         $otherUserRequest = $entityManager
