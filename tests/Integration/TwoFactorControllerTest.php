@@ -128,13 +128,14 @@ final class TwoFactorControllerTest extends WebTestCase
     {
         $authRequest = $this->createAuthRequest();
 
-        $this->client->request('GET', $this->url('2fa_enroll', $authRequest->getId()));
+        $crawler = $this->client->request('GET', $this->url('2fa_enroll', $authRequest->getId()));
 
         self::assertResponseIsSuccessful();
         $userSecret = $this->findUserSecret();
         self::assertNotNull($userSecret);
         self::assertFalse($userSecret->isResetSecretOnNextAuth());
         self::assertSelectorTextSame('strong', $userSecret->getSecret());
+        self::assertStringStartsWith('data:image/png;base64,', $crawler->filter('img')->attr('src'));
     }
 
     public function testEnrollShowsTheSameSecretWhenReopenedWithTheSameAuthRequest(): void
