@@ -96,11 +96,5 @@
         "symfony/stopwatch": "7.4.*",
         "symfony/web-profiler-bundle": "7.4.*",
         "zircote/swagger-php": "^5.1"
-    },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/sgoranov/identity-link-shared"
-        }
-    ]
+    }
 }
