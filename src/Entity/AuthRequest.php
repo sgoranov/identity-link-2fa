@@ -7,7 +7,7 @@ use App\Repository\AuthRequestRepository;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use OpenApi\Attributes as OA;
-use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: AuthRequestRepository::class)]
@@ -76,7 +76,7 @@ class AuthRequest
     #[ORM\Column(type: 'text')]
     #[Assert\NotBlank(groups: ['create'])]
     #[Assert\Length(min: 1, max: 2048, groups: ['create'])]
-    #[Assert\Url(protocols: ['http', 'https'], groups: ['create'])]
+    #[Assert\Url(protocols: ['http', 'https'], requireTld: false, groups: ['create'])]
     private string $redirectUri;
 
     #[ORM\Column]
