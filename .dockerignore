@@ -4,3 +4,4 @@
 var
 vendor
 docker-compose-test.yaml
+assets/vendor

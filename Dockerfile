@@ -24,7 +24,7 @@ ENV DB_USER=dummy
 ENV DB_PASSWORD=dummy
 
 COPY . .
-RUN composer install --no-interaction --no-scripts --no-progress
+RUN composer install --no-interaction --no-progress
 
 CMD ["vendor/bin/phpunit"]
 
