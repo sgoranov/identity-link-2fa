@@ -1,25 +1,9 @@
 # Identity Link 2FA
 
-![License](https://img.shields.io/github/license/sgoranov/identity-link-2fa)
-![Issues](https://img.shields.io/github/issues/sgoranov/identity-link-2fa)
-[![PHPUnit Tests](https://github.com/sgoranov/identity-link-2fa/actions/workflows/phpunit.yml/badge.svg)](https://github.com/sgoranov/identity-link-2fa/actions/workflows/phpunit.yml)
-[![Security Audit](https://github.com/sgoranov/identity-link-2fa/actions/workflows/vulnerability-scan.yml/badge.svg)](https://github.com/sgoranov/identity-link-2fa/actions/workflows/vulnerability-scan.yml)
-
 The two-factor authentication service of the Identity Link system. Users verify their identity with time-based
 one-time passwords (TOTP) from an authenticator app such as Google Authenticator or Authy. Other Identity Link
 services use its REST API to start a verification and to check its result, and the service serves the pages where
 users enroll their app and enter their codes.
-
-## Contents
-
-- [Domain model](#domain-model)
-- [Running the service](#running-the-service)
-- [Configuration](#configuration)
-- [Authentication and scopes](#authentication-and-scopes)
-- [Verification flow](#verification-flow)
-- [OpenAPI specification](#openapi-specification)
-- [Running the tests](#running-the-tests)
-- [License](#license)
 
 ## Domain model
 
@@ -113,7 +97,7 @@ bin/test-run
 ```
 
 This builds the `test` image, runs PHPUnit, and removes the containers and volumes afterwards. The script exits with
-PHPUnit's exit code, and CI runs the same script on every push and pull request to `develop`.
+PHPUnit's exit code, and CI runs the same script on every push and pull request to `develop` and `main`.
 
 To debug tests interactively, open a shell in the test container with the project directory mounted at `/app`:
 
