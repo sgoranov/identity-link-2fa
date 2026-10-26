@@ -12,14 +12,8 @@
 
 ###> phpunit/phpunit ###
 /phpunit.xml
-.phpunit.result.cache
+/.phpunit.cache/
 ###< phpunit/phpunit ###
-
-###> symfony/phpunit-bridge ###
-.phpunit.result.cache
-/phpunit.xml
-.phpunit.cache
-###< symfony/phpunit-bridge ###
 
 ###> symfony/asset-mapper ###
 /public/assets/
@@ -27,3 +21,14 @@
 ###< symfony/asset-mapper ###
 
 .idea
+
+/local_theme/*
+/local_theme/**
+!/local_theme/
+!/local_theme/.gitkeep
+!/local_theme/templates/
+!/local_theme/templates/.gitkeep
+!/local_theme/public/
+!/local_theme/public/.gitkeep
+!/local_theme/translations/
+!/local_theme/translations/.gitkeep

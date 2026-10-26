@@ -24,7 +24,7 @@ ENV DB_USER=dummy
 ENV DB_PASSWORD=dummy
 
 COPY . .
-RUN composer install --no-interaction --no-scripts --no-progress
+RUN composer install --no-interaction --no-progress
 
 CMD ["vendor/bin/phpunit"]
 
@@ -34,6 +34,7 @@ RUN install-php-extensions \
     gd \
     pgsql \
     pdo_pgsql \
+    redis \
     zip
 
 ENV SERVER_NAME=":9003"

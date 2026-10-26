@@ -12,18 +12,18 @@ use Doctrine\ORM\EntityManagerInterface;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Encoding\Encoding;
-use Endroid\QrCode\Label\Font\NotoSans;
+use Endroid\QrCode\Label\Font\OpenSans;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\Result\ResultInterface;
 use OTPHP\TOTP;
+use Psr\Clock\ClockInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class TwoFactorController extends AbstractController
@@ -34,6 +34,7 @@ final class TwoFactorController extends AbstractController
         private readonly UserSecretRepository $userSecretRepository,
         private readonly EntityManagerInterface $entityManager,
         private readonly TranslatorInterface $translator,
+        private readonly ClockInterface $clock,
     )
     {
     }
@@ -57,7 +58,7 @@ final class TwoFactorController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $totp = TOTP::create($userSecret->getSecret());
+            $totp = TOTP::create($userSecret->getSecret(), clock: $this->clock);
 
             if ($totp->verify($form->get('code')->getData())) {
 
@@ -95,7 +96,7 @@ final class TwoFactorController extends AbstractController
             throw new BadRequestException('Invalid authorization request');
         }
 
-        $totp = TOTP::create();
+        $totp = TOTP::create(clock: $this->clock);
 
         /** @var UserSecret $userSecret */
         $userSecret = $this->userSecretRepository->findOneBy(['userId' => $authRequest->getUserId()]);
@@ -136,16 +137,16 @@ final class TwoFactorController extends AbstractController
 
     private function generateQrCode(TOTP $totp): ResultInterface
     {
-        return Builder::create()
-            ->writer(new PngWriter())
-            ->data($totp->getProvisioningUri())
-            ->encoding(new Encoding('UTF-8'))
-            ->backgroundColor(new Color(255, 255, 255, 127))
-            ->size(300)
-            ->margin(10)
-            ->labelText($this->translator->trans('enroll.scan'))
-            ->labelFont(new NotoSans(20))
-            ->build();
+        return (new Builder(
+            writer: new PngWriter(),
+            data: $totp->getProvisioningUri(),
+            encoding: new Encoding('UTF-8'),
+            size: 300,
+            margin: 10,
+            backgroundColor: new Color(255, 255, 255, 127),
+            labelText: $this->translator->trans('enroll.scan'),
+            labelFont: new OpenSans(20),
+        ))->build();
     }
 
     private function generateSecret(TOTP $totp, string $userId): string

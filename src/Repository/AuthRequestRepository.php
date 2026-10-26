@@ -18,7 +18,7 @@ class AuthRequestRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('t')
             ->where('t.id = :id')
-            ->andWhere('t.expired >= :now')
+            ->andWhere('t.expired > :now')
             ->setParameter('id', $id)
             ->setParameter('now', new \DateTime());
 
@@ -31,7 +31,7 @@ class AuthRequestRepository extends ServiceEntityRepository
             ->update()
             ->set('t.expired', ':now')
             ->where('t.userId = :identifier')
-            ->andWhere('t.expired >= :now')
+            ->andWhere('t.expired > :now')
             ->setParameter('identifier', $id)
             ->setParameter('now', new \DateTime());
 
